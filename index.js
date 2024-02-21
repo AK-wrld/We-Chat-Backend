@@ -34,5 +34,18 @@ io.on("connection", (socket) => {
         console.log(data.uid)
         io.in(data.uid).emit("friend_req_unsent",data.message)
     })
+    socket.on("send_message",(data)=> {
+        console.log(data.message)
+        io.in(data.uid).emit("add_message",data.message)
+    })
+    socket.on("isTyping",(data)=> {
+        // console.log("typing")
+        // console.log(data.uid)
+        io.in(data.uid).emit("typing")
+    })
+    socket.on("notTyping",(data)=> {
+        // console.log(data.uid)
+        io.in(data.uid).emit("not_typing")
+    })
   });
 httpServer.listen(80);
