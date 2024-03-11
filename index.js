@@ -1,3 +1,4 @@
+
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -55,9 +56,17 @@ io.on("connection", (socket) => {
     // call related events
     socket.on("callUser",(data)=> {
         const {profileData} = data;
+        console.log(profileData)
         console.log("user called",data.userToCall)
         // console.log(data.signalData)
-        io.in(data.userToCall).emit("incoming_call",{signalData:data.signalData,from:data.from,profileData})
+        io.to(data.userToCall).emit("incoming_call",{signalData:data.signalData,from:data.from,profileData},error=> {
+            if(error) {
+                console.log(error)
+            }
+            else {
+                console.log("call sent")
+            }
+        })
     })
     socket.on("busyCall",(data)=> {
         // console.log({data})
