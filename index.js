@@ -41,12 +41,14 @@ io.on("connection", (socket) => {
     //chat related events
     socket.on("send_message",(data)=> {
         console.log(data.message)
-        io.in(data.uid).emit("add_message",data.message)
+        // io.to(data.uid).emit("add_message",data.message)
+        socket.broadcast.to(data.uid).emit("add_message",data.message)
     })
     socket.on("isTyping",(data)=> {
         // console.log("typing")
         // console.log(data.uid)
-        io.in(data.uid).emit("typing")
+        // io.to(data.uid).emit("typing")
+        socket.broadcast.to(data.uid).emit("typing")
     })
     socket.on("notTyping",(data)=> {
         // console.log(data.uid)
