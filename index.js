@@ -85,5 +85,27 @@ io.on("connection", (socket) => {
         console.log(friendId)
         socket.in(friendId).emit("call_ended")
     })
+    socket.on("joinGroup",(data)=>{
+        const {groupId} = data;
+        socket.join(groupId);
+    })
+    socket.on('updateGroup',(data)=> {
+        const {groupId,newName,newDp,newMembers} = data
+        console.log({data})
+        newMembers.forEach(member=> {
+            console.log(member)
+            io.in(member).emit("group_updated",{newName,newDp,newMembers,id:groupId})
+            io.in(member).emit("group_list_updated",{newName,newDp,newMembers,id:groupId})
+        })
+        // socket.in(groupId).emit("group_updated",{newName,newDp,newMembers})
+        
+    })
+    socket.on("removeMember",(data)=> {
+        const {groupId,removedMemberId,newMembers} = data
+        console.log({newMembers})
+        io.to(groupId).except(removedMemberId).emit("member_removed",{newMembers})
+        io.to(removedMemberId).emit("group_removed")
+    })
+    
   });
 httpServer.listen(80);
