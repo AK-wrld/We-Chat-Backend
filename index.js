@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
 
     //chat related events
     socket.on("send_message",(data)=> {
-        console.log(data.message)
+        console.log(data.msgSentBy)
         // io.to(data.uid).emit("add_message",data.message)
         socket.broadcast.to(data.uid).emit("add_message",data.message)
     })
@@ -48,11 +48,11 @@ io.on("connection", (socket) => {
         // console.log("typing")
         // console.log(data.uid)
         // io.to(data.uid).emit("typing")
-        socket.broadcast.to(data.uid).emit("typing")
+        socket.broadcast.to(data.uid).emit("typing",{msgSentBy:data.msgSentBy})
     })
     socket.on("notTyping",(data)=> {
         // console.log(data.uid)
-        io.in(data.uid).emit("not_typing")
+        io.in(data.uid).emit("not_typing",{msgSentBy:data.msgSentBy})
     })
 
     // call related events
